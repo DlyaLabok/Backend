@@ -1,0 +1,18 @@
+Hello from Node.js File Manager!
+================================
+
+Це тестовий файл для демонстрації роботи з файлами у Node.js.
+
+Теми, які тут охоплені:
+- fs.readFile() / fs.readFileSync()
+- fs.writeFile() / fs.writeFileSync()
+- fs.copyFile()
+- fs.appendFile()
+- Buffer
+
+Використання:
+----------
+node index.js read test-data/sample.txt
+node index.js copy test-data/sample.txt backup.txt
+node index.js info test-data/sample.txt
+
