@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+    <nav class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/dashboard" class="logo">
+                    <span class="logo-icon">🔐</span>
+                    <span class="logo-text">Auth System</span>
+                </a>
+
+                <div class="nav-links">
+                    <a href="/dashboard" class="nav-link active">Dashboard</a>
+                    <a href="/auth/profile" class="nav-link">Профіль</a>
+                    <a href="/demo/cookies" class="nav-link">Cookies Demo</a>
+                    <a href="/demo/jwt" class="nav-link">JWT Demo</a>
+                </div>
+
+                <div class="user-menu">
+                    <span class="user-badge"><%= user.role %></span>
+                    <span class="user-name"><%= user.name %></span>
+                    <a href="/auth/logout" class="btn btn-sm">Вийти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="welcome-banner">
+                <h1>👋 Ласкаво просимо, <%= user.name %>!</h1>
+                <p>Роль: <strong><%= user.role %></strong> | Email: <%= user.email %></p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>🔐 Автентифікація</h2>
+                    <p>Ця система демонструє різні методи автентифікації:</p>
+                    <ul>
+                        <li><strong>Session</strong> - традиційна авторизація через сесію</li>
+                        <li><strong>Cookie</strong> - збереження даних в браузері</li>
+                        <li><strong>JWT</strong> - stateless токени для API</li>
+                        <li><strong>BCrypt</strong> - безпечне хешування паролів</li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>🍪 Cookies</h2>
+                    <p>Cookies зберігаються в браузері та передаються з кожним запитом.</p>
+                    <div class="demo-buttons">
+                        <a href="/demo/cookies" class="btn btn-sm">Встановити Cookies</a>
+                        <a href="/demo/cookies/read" class="btn btn-sm">Читати Cookies</a>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>🔑 JWT Tokens</h2>
+                    <p>JSON Web Tokens використовуються для stateless авторизації.</p>
+                    <div class="demo-buttons">
+                        <a href="/demo/jwt" class="btn btn-sm">Згенерувати JWT</a>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>📊 API Endpoints</h2>
+                    <p>REST API для автентифікації:</p>
+                    <div class="code-block">
+                        <code>
+# Login<br>
+curl -X POST http://localhost:3000/api/auth/login<br>
+  -H "Content-Type: application/json"<br>
+  -d '{"email":"admin@auth.com","password":"password123"}'
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>🛡️ Безпека</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>httpOnly cookies</strong>
+                        <p>JavaScript не має доступу до сесійних cookies</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>sameSite: strict</strong>
+                        <p>Захист від Cross-Site Request Forgery (CSRF)</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>BCrypt hashing</strong>
+                        <p>Паролі зберігаються ухешованими з salt</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>Rate limiting</strong>
+                        <p>Обмеження запитів для захисту від brute-force</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

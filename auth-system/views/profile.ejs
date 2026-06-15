@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+    <nav class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/dashboard" class="logo">
+                    <span class="logo-icon">🔐</span>
+                    <span class="logo-text">Auth System</span>
+                </a>
+                <div class="user-menu">
+                    <a href="/dashboard" class="nav-link">Dashboard</a>
+                    <a href="/auth/logout" class="btn btn-sm">Вийти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-page">
+        <div class="container">
+            <h1>👤 Профіль користувача</h1>
+
+            <% if (error) { %>
+                <div class="alert alert-error"><%= error %></div>
+            <% } %>
+
+            <% if (success) { %>
+                <div class="alert alert-success"><%= success %></div>
+            <% } %>
+
+            <div class="profile-grid">
+                <div class="profile-info">
+                    <h2>Інформація</h2>
+                    <div class="info-row">
+                        <span class="label">ID:</span>
+                        <span class="value"><%= user.id %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Ім'я:</span>
+                        <span class="value"><%= user.name %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Email:</span>
+                        <span class="value"><%= user.email %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Роль:</span>
+                        <span class="value"><%= user.role %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Створено:</span>
+                        <span class="value"><%= new Date(user.createdAt).toLocaleDateString('uk-UA') %></span>
+                    </div>
+                </div>
+
+                <div class="profile-edit">
+                    <h2>Редагувати профіль</h2>
+                    <form action="/auth/profile" method="POST">
+                        <div class="form-group">
+                            <label for="name">Ім'я</label>
+                            <input type="text" id="name" name="name" value="<%= user.name %>" required>
+                        </div>
+
+                        <hr>
+
+                        <h3>Зміна пароля</h3>
+                        <div class="form-group">
+                            <label for="currentPassword">Поточний пароль</label>
+                            <input type="password" id="currentPassword" name="currentPassword" placeholder="Введіть поточний пароль">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">Новий пароль</label>
+                            <input type="password" id="newPassword" name="newPassword" placeholder="Мінімум 6 символів">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Підтвердження нового пароля</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Повторіть новий пароль">
+                        </div>
+
+                        <button type="submit" class="btn">Зберегти зміни</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

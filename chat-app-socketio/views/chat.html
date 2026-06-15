@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Socket.IO</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="chat-page">
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>💬 Chat</h2>
+                <div class="user-info">
+                    <span id="currentUser"></span>
+                    <button id="leaveBtn" class="btn btn-sm btn-danger">Вийти</button>
+                </div>
+            </div>
+
+            <div class="room-list">
+                <h3>Кімнати</h3>
+                <button class="room-btn" data-room="general">💬 Загальна</button>
+                <button class="room-btn" data-room="tech">👨‍💻 Технічна</button>
+                <button class="room-btn" data-room="random">🎲 Випадкова</button>
+            </div>
+
+            <div class="users-list">
+                <h3>Учасники (<span id="userCount">0</span>)</h3>
+                <ul id="users"></ul>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <div class="chat-header">
+                <div class="current-room">
+                    <span id="roomName">general</span>
+                    <span id="roomUsersCount" class="users-badge"></span>
+                </div>
+                <div class="chat-actions">
+                    <button id="toggleSidebar" class="btn btn-sm">☰</button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages" id="messages">
+                <div class="welcome-message">
+                    <p>Завантаження повідомлень...</p>
+                </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="typing-indicator" id="typingIndicator"></div>
+
+            <!-- Message Input -->
+            <div class="message-input">
+                <form id="messageForm">
+                    <input type="text" id="messageInput" placeholder="Введіть повідомлення..." 
+                           autocomplete="off" maxlength="500">
+                    <button type="submit" class="btn">Надіслати</button>
+                </form>
+
+                <div class="input-actions">
+                    <button type="button" id="imageBtn" class="btn btn-sm" title="Надіслати зображення">
+                        🖼️
+                    </button>
+                    <button type="button" id="pmBtn" class="btn btn-sm" title="Приватне повідомлення">
+                        🔒
+                    </button>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+        </main>
+    </div>
+
+    <!-- Private Message Modal -->
+    <div class="modal" id="pmModal">
+        <div class="modal-content">
+            <h3>🔒 Приватне повідомлення</h3>
+            <select id="pmUserSelect">
+                <option value="">Оберіть користувача</option>
+            </select>
+            <input type="text" id="pmMessage" placeholder="Текст повідомлення...">
+            <div class="modal-actions">
+                <button id="sendPmBtn" class="btn">Надіслати</button>
+                <button id="closePmBtn" class="btn btn-sm">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Get params
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        const room = urlParams.get('room');
+
+        if (!username || !room) {
+            window.location.href = '/';
+        }
+
+        // Connect to Socket.IO
+        const socket = io();
+
+        // DOM Elements
+        const messagesEl = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const messageForm = document.getElementById('messageForm');
+        const usersEl = document.getElementById('users');
+        const userCountEl = document.getElementById('userCount');
+        const currentUserEl = document.getElementById('currentUser');
+        const roomNameEl = document.getElementById('roomName');
+        const roomUsersCountEl = document.getElementById('roomUsersCount');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const pmModal = document.getElementById('pmModal');
+        const pmUserSelect = document.getElementById('pmUserSelect');
+        const pmMessageInput = document.getElementById('pmMessage');
+
+        // Current room
+        let currentRoom = room;
+
+        // ============================================
+        // Join Room
+        // ============================================
+        socket.emit('join', { username, room });
+
+        currentUserEl.textContent = username;
+        roomNameEl.textContent = room;
+
+        // ============================================
+        // Receive Messages
+        // ============================================
+        socket.on('message', (message) => {
+            addMessage(message);
+        });
+
+        // Load history
+        socket.on('loadHistory', (messages) => {
+            messagesEl.innerHTML = '';
+            messages.forEach(msg => addMessage(msg));
+            scrollToBottom();
+        });
+
+        // ============================================
+        // Room Users
+        // ============================================
+        socket.on('roomUsers', (users) => {
+            userCountEl.textContent = users.length;
+            roomUsersCountEl.textContent = `${users.length} учасників`;
+
+            usersEl.innerHTML = '';
+            users.forEach(user => {
+                if (user.username !== username) {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    li.dataset.userId = user.id;
+                    li.dataset.username = user.username;
+                    li.addEventListener('click', () => openPmModal(user.username, user.id));
+                    usersEl.appendChild(li);
+
+                    // Add to PM select
+                    const option = document.createElement('option');
+                    option.value = user.username;
+                    option.textContent = user.username;
+                    pmUserSelect.appendChild(option);
+                }
+            });
+        });
+
+        // ============================================
+        // Typing Indicator
+        // ============================================
+        let typingTimeout;
+
+        messageInput.addEventListener('input', () => {
+            socket.emit('typing');
+
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                socket.emit('stopTyping');
+            }, 1000);
+        });
+
+        socket.on('typing', (data) => {
+            if (data.isTyping) {
+                typingIndicator.textContent = `${data.username} друкує...`;
+            } else {
+                typingIndicator.textContent = '';
+            }
+        });
+
+        // ============================================
+        // Send Message
+        // ============================================
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+
+            if (text) {
+                socket.emit('chatMessage', text);
+                messageInput.value = '';
+                socket.emit('stopTyping');
+            }
+        });
+
+        // ============================================
+        // Private Message
+        // ============================================
+        document.getElementById('pmBtn').addEventListener('click', () => {
+            pmModal.style.display = 'flex';
+        });
+
+        document.getElementById('closePmBtn').addEventListener('click', () => {
+            pmModal.style.display = 'none';
+        });
+
+        document.getElementById('sendPmBtn').addEventListener('click', () => {
+            const to = pmUserSelect.value;
+            const text = pmMessageInput.value.trim();
+
+            if (to && text) {
+                socket.emit('privateMessage', { to, text });
+                pmMessageInput.value = '';
+                pmModal.style.display = 'none';
+            }
+        });
+
+        socket.on('privateMessage', (msg) => {
+            const isForMe = msg.type === 'private' && msg.from !== username;
+            
+            addMessage({
+                type: 'private',
+                username: msg.from,
+                text: msg.text,
+                timestamp: msg.timestamp
+            });
+        });
+
+        function openPmModal(username, userId) {
+            pmUserSelect.value = username;
+            pmModal.style.display = 'flex';
+            pmMessageInput.focus();
+        }
+
+        // ============================================
+        // Send Image
+        // ============================================
+        document.getElementById('imageBtn').addEventListener('click', () => {
+            document.getElementById('imageInput').click();
+        });
+
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    socket.emit('sendImage', {
+                        imageData: event.target.result,
+                        filename: file.name
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ============================================
+        // Switch Room
+        // ============================================
+        document.querySelectorAll('.room-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const newRoom = btn.dataset.room;
+                if (newRoom !== currentRoom) {
+                    socket.emit('switchRoom', newRoom);
+                    currentRoom = newRoom;
+                    roomNameEl.textContent = newRoom;
+
+                    // Clear PM select
+                    pmUserSelect.innerHTML = '<option value="">Оберіть користувача</option>';
+                }
+            });
+        });
+
+        // ============================================
+        // Leave Chat
+        // ============================================
+        document.getElementById('leaveBtn').addEventListener('click', () => {
+            localStorage.removeItem('chatUsername');
+            localStorage.removeItem('chatRoom');
+            window.location.href = '/';
+        });
+
+        // ============================================
+        // Helper Functions
+        // ============================================
+        function addMessage(msg) {
+            const div = document.createElement('div');
+            div.className = `message message-${msg.type}`;
+
+            const time = new Date(msg.timestamp).toLocaleTimeString('uk-UA', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            if (msg.type === 'system') {
+                div.innerHTML = `<span class="system-text">${msg.text}</span>`;
+            } else if (msg.type === 'private') {
+                div.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-user">🔒 ${msg.username}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-text">${msg.text}</div>
+                `;
+            } else if (msg.type === 'image') {
+                div.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-user">${msg.username}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <img src="${msg.imageData}" alt="Зображення" class="message-image">
+                `;
+            } else {
+                div.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-user">${msg.username}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(msg.text)}</div>
+                `;
+            }
+
+            messagesEl.appendChild(div);
+            scrollToBottom();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function scrollToBottom() {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        // Focus input
+        messageInput.focus();
+
+        // Close modal on outside click
+        pmModal.addEventListener('click', (e) => {
+            if (e.target === pmModal) {
+                pmModal.style.display = 'none';
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && pmModal.style.display === 'flex') {
+                pmModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

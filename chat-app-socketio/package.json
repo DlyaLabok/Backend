@@ -1,0 +1,27 @@
+{
+  "name": "chat-app-socketio",
+  "version": "1.0.0",
+  "description": "Real-time Chat App with Socket.IO - WebSockets, broadcasting, private messages",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "chat",
+    "socket.io",
+    "websockets",
+    "real-time",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Chat - Socket.IO</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="join-page">
+    <div class="join-container">
+        <div class="join-card">
+            <div class="join-header">
+                <h1>💬 Chat App</h1>
+                <p>Real-time чат з Socket.IO</p>
+            </div>
+
+            <form id="joinForm" class="join-form">
+                <div class="form-group">
+                    <label for="username">Ваше ім'я</label>
+                    <input type="text" id="username" name="username" required 
+                           placeholder="Введіть ім'я" maxlength="20" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="room">Оберіть кімнату</label>
+                    <select id="room" name="room" required>
+                        <option value="general">💬 Загальна (general)</option>
+                        <option value="tech">👨‍💻 Технічна (tech)</option>
+                        <option value="random">🎲 Випадкова (random)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-block">
+                    Приєднатися до чату →
+                </button>
+            </form>
+
+            <div class="join-info">
+                <h3>🔌 Socket.IO Demo</h3>
+                <p>Цей чат демонструє:</p>
+                <ul>
+                    <li>Real-time повідомлення</li>
+                    <li>Broadcasting</li>
+                    <li>Приватні повідомлення</li>
+                    <li>Керування кімнатами</li>
+                    <li>Індикатор друку</li>
+                    <li>Відправка зображень</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('joinForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const room = document.getElementById('room').value;
+
+            if (!username) {
+                alert('Введіть ваше ім\'я');
+                return;
+            }
+
+            // Зберігаємо в localStorage
+            localStorage.setItem('chatUsername', username);
+            localStorage.setItem('chatRoom', room);
+
+            // Переходимо до чату
+            window.location.href = `/chat?username=${encodeURIComponent(username)}&room=${encodeURIComponent(room)}`;
+        });
+
+        // Якщо є збережені дані - заповнюємо
+        const savedUsername = localStorage.getItem('chatUsername');
+        const savedRoom = localStorage.getItem('chatRoom');
+
+        if (savedUsername) {
+            document.getElementById('username').value = savedUsername;
+        }
+        if (savedRoom) {
+            document.getElementById('room').value = savedRoom;
+        }
+    </script>
+</body>
+</html>
