@@ -1,0 +1,53 @@
+//- products/edit.pug - Форма редагування товару
+//- Демонструє: Pug forms, pre-filled values
+
+extends ../layout
+
+block content
+    .container
+        .page-header
+            h1.page-title Редагувати товар
+            a.btn(href="/products") ← Назад до каталогу
+
+        .form-container
+            if error
+                .alert.alert-error= error
+
+            form(action="/products/" + product.id + "?_method=PUT" method="POST" enctype="multipart/form-data")
+                .form-group
+                    label(for="name") Назва товару *
+                    input(type="text" id="name" name="name" required value=product.name)
+
+                .form-group
+                    label(for="description") Опис
+                    textarea(id="description" name="description" rows="4")= product.description || ''
+
+                .form-group
+                    label(for="price") Ціна (грн) *
+                    input(type="number" id="price" name="price" required min="0" step="0.01" value=product.price)
+
+                .form-group
+                    label(for="category") Категорія
+                    select(id="category" name="category")
+                        option(value="electronics" selected=product.category === 'electronics') Електроніка
+                        option(value="clothing" selected=product.category === 'clothing') Одяг
+                        option(value="books" selected=product.category === 'books') Книги
+                        option(value="home" selected=product.category === 'home') Для дому
+                        option(value="other" selected=product.category === 'other') Інше
+
+                .form-group
+                    label(for="stock") Кількість на складі
+                    input(type="number" id="stock" name="stock" min="0" value=product.stock || 0)
+
+                .form-group
+                    label(for="image") Зображення
+                    if product.image
+                        .current-image
+                            img(src=product.image, alt=product.name width="150")
+                            p.small Поточне зображення
+                    input(type="file" id="image" name="image" accept="image/*")
+                    small Завантажте нове зображення щоб замінити
+
+                .form-actions
+                    button.btn.btn-primary(type="submit") 💾 Оновити
+                    a.btn(href="/products") Скасувати

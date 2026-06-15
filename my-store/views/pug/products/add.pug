@@ -1,0 +1,51 @@
+//- products/add.pug - Форма додавання товару
+//- Демонструє: Pug forms, file upload, input fields
+
+extends ../layout
+
+block content
+    .container
+        .page-header
+            h1.page-title Додати товар
+            a.btn(href="/products") ← Назад до каталогу
+
+        .form-container
+            //- Error message
+            if error
+                .alert.alert-error= error
+
+            //- Product form (multipart/form-data для Multer)
+            form(action="/products/add" method="POST" enctype="multipart/form-data")
+                .form-group
+                    label(for="name") Назва товару *
+                    input(type="text" id="name" name="name" required placeholder="Введіть назву")
+
+                .form-group
+                    label(for="description") Опис
+                    textarea(id="description" name="description" rows="4" placeholder="Опис товару")
+
+                .form-group
+                    label(for="price") Ціна (грн) *
+                    input(type="number" id="price" name="price" required min="0" step="0.01" placeholder="0.00")
+
+                .form-group
+                    label(for="category") Категорія
+                    select(id="category" name="category")
+                        option(value="electronics") Електроніка
+                        option(value="clothing") Одяг
+                        option(value="books") Книги
+                        option(value="home") Для дому
+                        option(value="other") Інше
+
+                .form-group
+                    label(for="stock") Кількість на складі
+                    input(type="number" id="stock" name="stock" min="0" value="0")
+
+                .form-group
+                    label(for="image") Зображення
+                    input(type="file" id="image" name="image" accept="image/*")
+                    small Формат: JPG, PNG, GIF, WebP. Макс. 5MB
+
+                .form-actions
+                    button.btn.btn-primary(type="submit") 💾 Зберегти
+                    a.btn(href="/products") Скасувати

@@ -1,0 +1,35 @@
+//- layout.pug - Головний шаблон
+//- Демонструє: Pug includes, blocks, extends
+
+doctype html
+html(lang="uk")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title= title || 'MyStore'
+        link(rel="stylesheet" href="/public/css/style.css")
+        link(rel="icon" href="/public/images/favicon.ico")
+    body
+        //- Include navbar
+        include ../includes/header.pug
+
+        //- Flash messages
+        if success && success.length
+            .alert.alert-success
+                each msg in success
+                    p= msg
+
+        if error && error.length
+            .alert.alert-error
+                each msg in error
+                    p= msg
+
+        //- Main content
+        main
+            block content
+
+        //- Include footer
+        include ../includes/footer.pug
+
+        //- Scripts
+        script(src="/public/js/main.js")

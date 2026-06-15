@@ -1,0 +1,43 @@
+{{!-- handlebars/home.handlebars --}}
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Ласкаво просимо до MyStore!</h1>
+        <p class="hero-subtitle">Найкращий вибір електроніки за найкращими цінами</p>
+        <a href="/products" class="btn btn-lg">Переглянути каталог</a>
+    </div>
+</section>
+
+<section class="categories">
+    <div class="container">
+        <h2 class="section-title">Категорії</h2>
+        <div class="categories-grid">
+            {{#each categories}}
+            <a href="/products?category={{this.name}}" class="category-card">
+                <span class="category-icon">📦</span>
+                <span class="category-name">{{this.label}}</span>
+                <span class="category-count">{{this.count}} товарів</span>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+{{#if products}}
+<section class="featured">
+    <div class="container">
+        <h2 class="section-title">Популярні товари</h2>
+        <div class="products-grid">
+            {{#each products}}
+            <div class="product-card">
+                <div class="product-image">{{#if this.image}}<img src="{{this.image}}">{{else}}📦{{/if}}</div>
+                <div class="product-info">
+                    <h3 class="product-name">{{this.name}}</h3>
+                    <p class="product-description">{{truncate this.description 80}}</p>
+                    <div class="product-price">{{formatPrice this.price}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+{{/if}}

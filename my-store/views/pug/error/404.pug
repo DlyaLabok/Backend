@@ -1,0 +1,11 @@
+//- error/404.pug - 404 сторінка
+
+extends ../layout
+
+block content
+    .container
+        .error-page
+            h1.error-code 404
+            h2.error-title Сторінку не знайдено
+            p.error-message= message || 'Вибачте, сторінка яку ви шукаєте не існує.'
+            a.btn(href="/") На головну

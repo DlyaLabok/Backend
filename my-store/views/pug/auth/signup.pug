@@ -1,0 +1,35 @@
+//- auth/signup.pug - Реєстрація
+
+extends ../layout
+
+block content
+    .container
+        .auth-container
+            .auth-card
+                h1.auth-title Реєстрація
+
+                if error
+                    .alert.alert-error= error
+
+                form(action="/auth/signup" method="POST")
+                    .form-group
+                        label(for="name") Ім'я *
+                        input(type="text" id="name" name="name" required placeholder="Ваше ім'я")
+
+                    .form-group
+                        label(for="email") Email *
+                        input(type="email" id="email" name="email" required placeholder="email@example.com")
+
+                    .form-group
+                        label(for="password") Пароль *
+                        input(type="password" id="password" name="password" required minlength="6" placeholder="Мінімум 6 символів")
+
+                    .form-group
+                        label(for="confirmPassword") Підтвердження пароля *
+                        input(type="password" id="confirmPassword" name="confirmPassword" required placeholder="Повторіть пароль")
+
+                    button.btn.btn-primary.btn-block(type="submit") Зареєструватися
+
+                .auth-footer
+                    p Вже є акаунт?
+                        a(href="/auth/login") Увійти

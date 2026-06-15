@@ -1,0 +1,61 @@
+//- home.pug - Головна сторінка
+//- Демонструє: Pug extends, block, loops, conditionals, filters
+
+extends layout
+
+block content
+    //- Hero section
+    section.hero
+        .container
+            h1.hero-title Ласкаво просимо до MyStore!
+            p.hero-subtitle Найкращий вибір електроніки за найкращими цінами
+            a.btn.btn-lg(href="/products") Переглянути каталог
+
+    //- Categories
+    section.categories
+        .container
+            h2.section-title Категорії
+            .categories-grid
+                each cat in categories
+                    a.category-card(href="/products?category=" + cat.name)
+                        span.category-icon 📦
+                        span.category-name= cat.label
+                        span.category-count= cat.count + " товарів"
+
+    //- Featured products
+    section.featured
+        .container
+            h2.section-title Популярні товари
+
+            //- Conditional: No products found
+            if !products || products.length === 0
+                .no-products
+                    p Товари не знайдено
+                    a.btn(href="/products/add") Додати перший товар
+            else
+                //- Loop: each...in
+                .products-grid
+                    each product in products
+                        .product-card
+                            .product-image
+                                if product.image
+                                    img(src=product.image, alt=product.name)
+                                else
+                                    .product-placeholder 📦
+                            .product-info
+                                h3.product-name= product.name
+                                p.product-description= product.description ? product.description.substring(0, 80) + '...' : ''
+                                .product-price
+                                    | #{new Intl.NumberFormat('uk-UA', {style: 'currency', currency: 'UAH'}).format(product.price)}
+                                .product-actions
+                                    a.btn.btn-sm(href="/products/" + product.id) Редагувати
+                                    form(action="/products/delete/" + product.id method="POST" style="display:inline")
+                                        button.btn.btn-sm.btn-danger(type="submit") Видалити
+
+    //- Engine info
+    section.engine-info
+        .container
+            .info-box
+                h3 🛠️ Поточний двигун: #{currentEngine.toUpperCase()}
+                p Цей сайт рендериться через #{currentEngine.toUpperCase()} шаблонізатор
+                p Змініть двигун у навігації вище

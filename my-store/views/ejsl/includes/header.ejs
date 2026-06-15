@@ -1,0 +1,31 @@
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <span class="logo-icon">🛒</span>
+                <span class="logo-text">MyStore</span>
+            </a>
+
+            <nav class="nav">
+                <a href="/" class="nav-link">Головна</a>
+                <a href="/products" class="nav-link">Каталог</a>
+            </nav>
+
+            <div class="engine-switcher">
+                <a href="?engine=pug" class="<%= currentEngine === 'pug' ? 'active' : '' %>">Pug</a>
+                <a href="?engine=ejs" class="<%= currentEngine === 'ejs' ? 'active' : '' %>">EJS</a>
+                <a href="?engine=hbs" class="<%= currentEngine === 'hbs' ? 'active' : '' %>">HBS</a>
+            </div>
+
+            <div class="user-menu">
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <span class="user-name"><%= user.name %></span>
+                    <a href="/auth/logout" class="btn btn-sm">Вийти</a>
+                <% } else { %>
+                    <a href="/auth/login" class="btn btn-sm">Увійти</a>
+                    <a href="/auth/signup" class="btn btn-sm">Реєстрація</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</header>

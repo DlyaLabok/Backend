@@ -1,0 +1,31 @@
+//- header.pug - Навігація
+//- Демонструє: Pug includes, conditional classes
+
+header.header
+    .container
+        .header-content
+            //- Logo
+            a.logo(href="/")
+                span.logo-icon 🛒
+                span.logo-text MyStore
+
+            //- Navigation
+            nav.nav
+                a.nav-link(href="/") Головна
+                a.nav-link(href="/products") Каталог
+                a.nav-link(href="/about") Про нас
+
+            //- Engine switcher
+            .engine-switcher
+                a(href="?engine=pug" class=currentEngine === 'pug' ? 'active' : '') Pug
+                a(href="?engine=ejs" class=currentEngine === 'ejs' ? 'active' : '') EJS
+                a(href="?engine=hbs" class=currentEngine === 'hbs' ? 'active' : '') HBS
+
+            //- User menu
+            .user-menu
+                if user
+                    span.user-name= user.name
+                    a.btn.btn-sm(href="/auth/logout") Вийти
+                else
+                    a.btn.btn-sm(href="/auth/login") Увійти
+                    a.btn.btn-sm(href="/auth/signup") Реєстрація

@@ -1,0 +1,30 @@
+//- auth/login.pug - Вхід
+
+extends ../layout
+
+block content
+    .container
+        .auth-container
+            .auth-card
+                h1.auth-title Вхід
+
+                if error
+                    .alert.alert-error= error
+
+                form(action="/auth/login" method="POST")
+                    .form-group
+                        label(for="email") Email *
+                        input(type="email" id="email" name="email" required placeholder="email@example.com")
+
+                    .form-group
+                        label(for="password") Пароль *
+                        input(type="password" id="password" name="password" required placeholder="Ваш пароль")
+
+                    button.btn.btn-primary.btn-block(type="submit") Увійти
+
+                .auth-footer
+                    p Немає акаунту?
+                        a(href="/auth/signup") Зареєструватися
+
+                .demo-hint
+                    p.small Демо-доступ: admin@store.com / admin123

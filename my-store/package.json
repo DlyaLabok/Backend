@@ -1,0 +1,45 @@
+{
+  "name": "my-store",
+  "version": "1.0.0",
+  "description": "MyStore - повний e-commerce застосунок з Pug/EJS/Handlebars, MySQL, MongoDB, Auth, Socket.IO",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "db:init": "node sql/init.js"
+  },
+  "keywords": [
+    "store",
+    "ecommerce",
+    "express",
+    "pug",
+    "ejs",
+    "handlebars",
+    "mysql",
+    "mongodb",
+    "sequelize"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pug": "^3.0.2",
+    "ejs": "^3.1.9",
+    "express-handlebars": "^7.1.2",
+    "mysql2": "^3.6.5",
+    "sequelize": "^6.35.2",
+    "mongoose": "^8.0.3",
+    "express-session": "^1.17.3",
+    "express-mysql-session": "^3.0.0",
+    "cookie-parser": "^1.4.6",
+    "multer": "^1.4.5-lts.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

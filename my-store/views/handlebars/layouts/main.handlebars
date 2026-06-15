@@ -1,0 +1,45 @@
+{{!-- handlebars/layouts/main.handlebars --}}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <span class="logo-icon">🛒</span>
+                    <span class="logo-text">MyStore</span>
+                </a>
+                <nav class="nav">
+                    <a href="/" class="nav-link">Головна</a>
+                    <a href="/products" class="nav-link">Каталог</a>
+                </nav>
+                <div class="engine-switcher">
+                    <a href="?engine=pug">Pug</a>
+                    <a href="?engine=ejs">EJS</a>
+                    <a href="?engine=hbs">HBS</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {{{body}}}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 MyStore. Всі права захищені.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/public/js/main.js"></script>
+</body>
+</html>
