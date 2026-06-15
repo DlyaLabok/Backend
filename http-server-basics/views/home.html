@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Server Basics - Node.js</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 HTTP Server Basics</h1>
+            <p class="subtitle">Демонстрація Node.js http модуля</p>
+        </header>
+
+        <main>
+            <div class="info-card">
+                <h2>📚 Що демонструється:</h2>
+                <ul>
+                    <li><strong>http.createServer()</strong> — створення сервера</li>
+                    <li><strong>Request</strong> — об'єкт запиту (method, url, headers)</li>
+                    <li><strong>Response</strong> — об'єкт відповіді (writeHead, end)</li>
+                    <li><strong>URL Routing</strong> — маршрутизація запитів</li>
+                    <li><strong>Query String</strong> — параметри запиту</li>
+                    <li><strong>POST Data</strong> — обробка POST запитів</li>
+                    <li><strong>Static Files</strong> — роздача статики</li>
+                    <li><strong>JSON API</strong> — REST API endpoints</li>
+                </ul>
+            </div>
+
+            <div class="demo-section">
+                <h2>🎯 Спробуйте:</h2>
+
+                <div class="demo-grid">
+                    <a href="/about" class="demo-card">
+                        <span class="icon">📖</span>
+                        <span>Про сайт</span>
+                    </a>
+
+                    <a href="/time" class="demo-card">
+                        <span class="icon">⏰</span>
+                        <span>Поточний час</span>
+                    </a>
+
+                    <a href="/hello?name=Олександр" class="demo-card">
+                        <span class="icon">👋</span>
+                        <span>Привітання</span>
+                    </a>
+
+                    <a href="/user/42" class="demo-card">
+                        <span class="icon">👤</span>
+                        <span>Користувач #42</span>
+                    </a>
+
+                    <a href="/form" class="demo-card">
+                        <span class="icon">📝</span>
+                        <span>Форма</span>
+                    </a>
+
+                    <a href="/json" class="demo-card">
+                        <span class="icon">📦</span>
+                        <span>JSON API</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h2>📋 API Endpoints:</h2>
+                <pre><code># Отримати час
+curl http://localhost:3000/time
+
+# Привітання
+curl "http://localhost:3000/hello?name=Марія"
+
+# Список користувачів
+curl http://localhost:3000/api/users
+
+# POST запит
+curl -X POST -H "Content-Type: application/json" \
+     -d '{"name":"Test"}' \
+     http://localhost:3000/api/data</code></pre>
+            </div>
+        </main>
+
+        <footer>
+            <p>Node.js HTTP Server Demo | <code>npm run dev</code> для розробки</p>
+        </footer>
+    </div>
+
+    <script src="/public/app.js"></script>
+</body>
+</html>

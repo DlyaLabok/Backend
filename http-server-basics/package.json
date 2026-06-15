@@ -1,0 +1,23 @@
+{
+  "name": "http-server-basics",
+  "version": "1.0.0",
+  "description": "HTTP Server Basics - демонстрація Node.js http модуля, роутингу, GET/POST, querystring",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "http",
+    "server",
+    "nodejs",
+    "routing",
+    "rest",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
